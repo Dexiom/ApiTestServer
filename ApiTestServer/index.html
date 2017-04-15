@@ -1,0 +1,23 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Redirect to Swagger</title>
+    <meta charset="utf-8"/>
+    <script>
+        var loc = location.href;
+        loc = loc.replace("/index.html", "");
+
+        loc = loc + "/swagger/ui/index";
+        loc = loc.replace("//swagger/ui/index", "/swagger/ui/index");
+
+        //if (loc.indexOf("localhost") === -1) {
+        //    loc = loc.replace("http://", "https://");
+        //}
+        //alert(loc);
+        location.href = loc;
+    </script>
+</head>
+<body>
+
+</body>
+</html>
