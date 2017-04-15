@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
@@ -59,6 +60,44 @@ namespace ApiTestServer.Controllers
         public HttpResponseMessage WillNotAllowYouToProceed()
         {
             return ApiHelper.CreateStringResponseMessage(HttpStatusCode.Forbidden, "I don't want you to go there");
+        }
+
+        /// <summary>
+        /// Get your IP address
+        /// </summary>
+        /// <returns></returns>
+        [Route("WhatIsMyIp")]
+        [HttpGet]
+        [SwaggerResponse(HttpStatusCode.OK)]
+        public HttpResponseMessage WhatIsMyIp()
+        {
+            var clientIp = string.Empty;
+            var context = System.Web.HttpContext.Current;
+
+            //try with HTTP_X_FORWARDED_FOR
+            var httpFormardedFor = context.Request.ServerVariables["HTTP_X_FORWARDED_FOR"];
+            if (!string.IsNullOrEmpty(httpFormardedFor))
+            {
+                var addresses = httpFormardedFor.Split(',');
+                if (addresses.Length != 0)
+                {
+                    clientIp = addresses[0];
+                }
+            }
+
+            //try with REMOTE_ADDR
+            if (string.IsNullOrEmpty(clientIp))
+                clientIp = context.Request.ServerVariables["REMOTE_ADDR"];
+
+
+            //we got it, let's format the answer
+            if (clientIp == "::1")
+                clientIp = "localhost";
+
+            if (clientIp.Contains(":"))
+                clientIp = clientIp.Split(':').First();
+
+            return ApiHelper.CreateStringResponseMessage(HttpStatusCode.OK, clientIp);
         }
     }
 }
