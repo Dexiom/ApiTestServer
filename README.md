@@ -1,2 +1,2 @@
 # ApiTestServer
-Web API 2 in it's simplest expression
+An ASP.NET Web API Application that can be used to test your API Client.
